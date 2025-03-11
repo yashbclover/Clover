@@ -10,37 +10,52 @@
    </head>
    <body>
       <div id="app">
-         {{ message }}
-         <br>
-         <div v-bind:class="vueBlackBGClass">
-            {{ 'You are visitor number: ' + Math.ceil(Math.random()*1000) }}
+         <div @:mousemove="mouseMove">
+            {{ message }}
+            <br>
+            <div v-bind:class="vueBlackBGClass">
+               {{ 'You are visitor number: ' + Math.ceil(Math.random()*1000) }}
+            </div>
+            <div v-bind:style="{ color: isImp ? color1 : color2 }">
+               Welcome to Vue JS
+            </div>
+            <div v-if="Condition1">
+               Condition 1 True
+            </div>
+            <div v-else-if="Condition2">
+               Condition 2 True
+            </div>
+            <div v-else>
+               Both Conditions false
+            </div>
+            <div v-if="status>=200 && status<300"> Online </div>
+            <div v-else> Error {{ status }} </div>
+            <div v-show="status<200 || status>300">
+               <p v-if="error.includes('404')">Web page doesn't exist</p>
+               <p v-else>{{ error }}</p>
+            </div>
+            <div>
+               Status Codes and their meanings:
+               <p v-for="(status, index) in statusCodes" :keys="Object.keys(status)[0]">
+                  {{ index }} : {{ Object.keys(status)[0] }} -> {{ Object.values(status)[0] }}
+               </p>
+            </div>
+            <p>Clicked {{ clickCounter }} times</p>
+            <Button @:click="onClick">Click!</Button>
+            <ol>
+               <li v-for="clientCode in ClientStatusCodes" @:click="currentClientStatusCode=clientCode.meaning">
+                  <Button>{{ clientCode.code }}</Button>
+               </li>
+            </ol>
+            <p>{{ currentClientStatusCode }}</p>
+            <div>
+               Mouse Position:
+               <br>
+               X = {{ xPos }}
+               <br>
+               Y = {{ yPos }}
+            </div>
          </div>
-         <div v-bind:style="{ color: isImp ? color1 : color2 }">
-            Welcome to Vue JS
-         </div>
-         <div v-if="Condition1">
-            Condition 1 True
-         </div>
-         <div v-else-if="Condition2">
-            Condition 2 True
-         </div>
-         <div v-else>
-            Both Conditions false
-         </div>
-         <div v-if="status>=200 && status<300"> Online </div>
-         <div v-else> Error {{ status }} </div>
-         <div v-show="status<200 || status>300">
-            <p v-if="error.includes('404')">Web page doesn't exist</p>
-            <p v-else>{{ error }}</p>
-         </div>
-         <div>
-            Status Codes and their meanings:
-                <p v-for="(status, index) in statusCodes" :keys="Object.keys(status)[0]">
-                 {{ index }} : {{ Object.keys(status)[0] }} -> {{ Object.values(status)[0] }}
-                </p>
-         </div>
-         <p>Clicked {{ clickCounter }} times</p>
-         <Button v-on:click="clickCounter++">Click!</Button>
       </div>
       <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
       <script>
@@ -64,6 +79,24 @@
                              {"500": "Server Error"},
                            ],
               clickCounter: 0,
+              ClientStatusCodes:  [
+                            {code: '400', meaning: 'Bad Request'},
+                            {code: '401', meaning: 'Unauthorized'},
+                            {code: '403', meaning: 'Forbidden'},
+                            {code: '404', meaning: 'Not Found'}
+                          ],
+              currentClientStatusCode: "Click on error code to find meaning",
+              xPos: 0,
+              yPos: 0
+             }
+           },
+           methods: {
+             onClick(){
+               this.clickCounter++
+             },
+             mouseMove(event){
+               this.xPos = event.offsetX
+               this.yPos = event.offsetY
              }
            }
          })
